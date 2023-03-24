@@ -17,6 +17,9 @@ import HelloWorld from "./components/HelloWorld.vue";
       vuex: dispatch{{ $store.state.count }}
     </div>
     <div>vuex: getters{{ $store.getters.doubleCounter }}</div>
+    <div @click="$store.state.count++" style="height: 50px">
+      通过store.state直接修改状态，如果使用严格模式会报警告
+    </div>
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>
