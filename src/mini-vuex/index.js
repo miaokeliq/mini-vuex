@@ -10,6 +10,9 @@ export function createStore(options) {
     // set state(v) {
     //   console.error("please use replaceState() to reset state");
     // },
+
+    _mutations: options.mutations, // 用户传进来的mutations
+    _actions: options.actions,
   };
 
   Object.defineProperty(store, "state", {
@@ -20,6 +23,32 @@ export function createStore(options) {
       console.error("please use replaceState() to reset state");
     },
   });
+  // commit 实现
+  // payload 用户传递进来的参数
+  function commit(type, payload) {
+    // 获取 type 对应的 mutation
+    const entry = this._mutations[type];
+
+    if (!entry) {
+      console.log(`unknown mutation type: ${type}`);
+      return;
+    }
+
+    entry.call(this._state, this._state, payload);
+  }
+  // dispatch 实现
+  function dispatch(type, payload) {
+    // 获取用户编写的 type 对应的 actions
+    const entry = this._actions[type];
+    if (!entry) {
+      console.log(`unknown action type: ${type}`);
+    }
+
+    entry(this, this, payload);
+  }
+
+  store.commit = commit.bind(store);
+  store.dispatch = dispatch.bind(store);
 
   // 插件实现要求的install方法
   store.install = function (app) {

@@ -20,3 +20,8 @@
 
 1. 把用户配置的 mutations 拿到
 2. 用户传入 type 类型，然后从 mutations 数组/对象中将 type 传入得到具体的 mutations，然后调用得到的 mutations 函数。
+
+## store.dispatch()
+
+写复杂的代码，异步操作等  
+只能做业务，不能直接修改状态，修改状态要通过 commit
