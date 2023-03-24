@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 export function createStore(options) {
   // 创建 Store实例
   const store = {
@@ -49,6 +49,29 @@ export function createStore(options) {
 
   store.commit = commit.bind(store);
   store.dispatch = dispatch.bind(store);
+
+  // 定义 store.getters
+  store.getters = {};
+  // 遍历用户定义的 getters
+  Object.keys(options.getters).forEach((key) => {
+    const result = computed(() => {
+      let getter = options.getters[key];
+      if (getter) {
+        return getter.call(store, store._state);
+      } else {
+        console.error(`Unknown getter: ${key}`);
+        return "";
+      }
+    });
+
+    Object.defineProperty(store.getters, key, {
+      get() {
+        return result;
+      },
+    });
+  });
+  // 动态定义 store.getters.xxx
+  // 值来自于用户定义的getter函数的返回值
 
   // 插件实现要求的install方法
   store.install = function (app) {
